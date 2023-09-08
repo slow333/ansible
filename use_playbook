@@ -1,0 +1,74 @@
+1. playbook 기초
+
+ 업데이트=> 패키지 설치 하기. 
+ 이름.yml
+ ---
+
+ - hosts: all		#대상 지정
+   become: true		#권한 설정
+   tasks:		# 할일
+
+   - name: update repo
+     apt:
+       update_cache: yes
+
+   - name: install apache2 package	#이름 지정
+     apt:				# 모듈 지정
+       name: apache2			# 모듈에 따른 패키지 이름
+       state: latest			# 최신버젼 설치
+   - name: add php support for apache
+     apt:
+       name: libapache2-mod-php
+       state: latest
+
+패키지 지우기
+  ===> state: absent # 이렇게 바꾸면 지우는 것임
+
+2. playbook when(조건문) 사용
+ ---
+
+ - hosts: all
+   become: true
+   tasks:
+
+   - name: update repo
+     apt:
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+
+   - name: install apache2 package	#이름 지정
+     apt:				# 모듈 지정
+       name: apache2			# 모듈에 따른 패키지 이름
+       state: latest			# 최신버젼 설치
+
+     # when은 gather_facts 를 통해 수집되는 항목에 대한 filter 기능 수행
+     when: ansible_distribution == "Ubuntu" # 하나 지정
+     # 배열로 지정
+     when: ansible_distribution in ["Debian", "Ubuntu"]
+     # 여러 조건 지정
+     when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "8.2"
+
+   - name: add php support for apache
+     apt:
+       name: libapache2-mod-php
+       state: latest
+     when: ansible_distribution == "Ubuntu"
+
+  # 조건에 따라 module을 변경: apt => dnf, yum 등으로 ...
+  # centos 개열은 패키지설치후에 자동 시작을 안하므로 추가 설정 필요.
+  # 역시 방화벽도 열어 주어야 함.
+3. refactory playbook
+
+playbook에서 변수 사용하기
+모듈 이름을 apt, dnf, yum에서 ansible에서 제공하는 package module을 사용
+package:
+  name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+
+inventory에 변수 내용을 정의
+192.168.219.5 apache_package=apache2 php_package=libapache2-mod-php
+192.168.219.11  apache_package=httpd php_package=php
+192.168.219.12 apache_package=httpd php_package=php
+192.168.219.3  apache_package=apache2 php_package=libapache2-mod-php
+
