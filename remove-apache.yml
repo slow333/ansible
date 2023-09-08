@@ -15,5 +15,5 @@
 
   - name: add php support for apache2
     apt:
-      name: libapache2-mod-php    
+      name: libapache2-mod-php
       state: absent
