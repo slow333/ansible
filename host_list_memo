@@ -2,11 +2,13 @@ host pc : 192.168.219.10
 
 centos: ansible_C7_219.14(GUI)	=> 192.168.219.14 pass : 1
 
-ansible : Ubuntu20-4(GUI)	=> 192.168.219.3 pass : 1  web
-ansible : DB_U22_219.5(GUI)	=> 192.168.219.5 pass : 1  web
+ubuntu : Ubuntu20-3(GUI)	=> 192.168.219.3 pass : 1  web
+ubuntu : DB_U22_219.5(GUI)	=> 192.168.219.5 pass : 1  web
 centos: C8(kal)-219.11(cli)	=> 192.168.219.11 pass : 1   DB
 centos: JSP_C7-219.12(cli)	=> 192.168.219.12 pass : 1  was
-Ubuntu20-219.13(cli zabbix)	=> 192.168.219.13 pass : 1 => wpdhl
+centos: ansible_C7_219.14(GUI) => 192.168.219.14 pass : 1  was
+
+Ubuntu20-219.13(cli zabbix)	=> 192.168.219.13 pass : 1 => 제거함
 
 host pc와 guest와 ping이 안될때 
 vmware virtual network editor에서 bridge를 설정
