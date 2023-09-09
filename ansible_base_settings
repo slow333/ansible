@@ -23,8 +23,9 @@ ansible 자동화 기능 관련
       나머지는 그냥 enter
     
   2) 나의 공개키를 상대방 서버에 전송
-     ssh-copy-id -i ~/.ssh/id_ed25519.pub #내가 생성한 공개key
-       [상대방의 IP]
+     ssh-copy-id -i ~/.ssh/id_ed25519.pub [상대방의 IP] #내가 생성한 공개key
+     ssh-copy-id [상대방의 IP] #wsl에서는 이렇게 해야함(???)
+     ## ip 변경되면 다시 키를 카피해야함
      암호 요구 : 상대방의 root 암호를 넣음.
      => 상대방 서버에 authorized_keys가 생성됨(나의 public key)
   * 내 개인키를 가지고 감싸면 서버에서 나의 공개키로 검증

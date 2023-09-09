@@ -6,6 +6,7 @@
 
  - hosts: all		#대상 지정
    become: true		#권한 설정
+   gather_facts: no # 기본 yes
    tasks:		# 할일 pre_tasks 사전에 수행
 
    - name: update repo
