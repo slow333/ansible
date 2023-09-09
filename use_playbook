@@ -72,3 +72,4 @@ inventory에 변수 내용을 정의
 192.168.219.12 apache_package=httpd php_package=php
 192.168.219.3  apache_package=apache2 php_package=libapache2-mod-php
 
+* tasks => pre_tasks 가장 먼저 수행하게 함...
