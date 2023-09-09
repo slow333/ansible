@@ -57,7 +57,7 @@ ansible 자동화 기능 관련
     => key, value 형태로 겁나 많이 나옮
        이걸 가지고 필터링 해서 사용함
 
-4. 권한 요청하기, 모듈정의하고 설치 패키지 이름 정하기
+4. 권한 요청하기, 모듈 정의하고 설치 패키지 이름 정하기
   ansible all -m apt -a update_cache=true 
                       --become --ask-become-pass
   ansible all -m yum -a update_cache=true 
