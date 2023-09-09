@@ -4,17 +4,11 @@
   become: true
   pre_tasks:
 
-  - name: install updates (CentOS 8)
-    dnf:
+  - name: install updates (CentOS 7, 8)
+    package:
       update_only: yes
       update_cache: yes
     when: ansible_distribution_version =="8"
-
-  - name: install updates (CentOS 7)
-    yum:
-      update_only: yes
-      update_cache: yes
-    when: ansible_distribution == "CentOS"
 
   - name: install updates (Ubuntu)
     apt:
@@ -34,15 +28,7 @@
       state: latest
     when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2, php package for centos 8
-    dnf:
-      name: 
-        - httpd
-        - php
-      state: latest
-    when: ansible_distribution == "CentOS" and ansible_distribution_version =="8"
-
-  - name: install apache2, php package for centos 7
+  - name: install apache2, php package for centos 7, 8
     yum:
       name: 
         - httpd
@@ -60,8 +46,8 @@
       state: latest
     when: ansible_distribution == "CentoOS" and ansible_distribution_version =="8"
 
-  - name: install mariadb packakge(CentOS 7)
-    yum:
+  - name: install mariadb packakge(CentOS 7, 8)
+    package:
       name: mariadb
       state: latest
     when: ansible_distribution == "CentoOS" and ansible_distribution_version =="7.9"

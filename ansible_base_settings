@@ -58,14 +58,11 @@ ansible 자동화 기능 관련
        이걸 가지고 필터링 해서 사용함
 
 4. 권한 요청하기, 모듈 정의하고 설치 패키지 이름 정하기
-  ansible all -m apt -a update_cache=true 
-                      --become --ask-become-pass
-  ansible all -m yum -a update_cache=true 
-                      --become --ask-become-pass
+  ansible all -m apt -a update_cache=true --become --ask-become-pass
+  ansible all -m yum -a update_cache=true --become --ask-become-pass
     ==> module 을 정의하고(apt, yum) 업데이트를 결정
-     https:#docs.ansible.com/ansible/latest 
-     여기서 module을 검색해서 해당되는 명령을 입력하면됨
-     잘 찾아서 해야함
+     docs.ansible.com/ansible/latest 
+     => 여기서 module을 검색해서 해당되는 명령을 입력하면됨 잘 찾아서 해야함
      --become 은 관리자권한을 갖는 것이고
      --ask-become-pass는 암호를 입력한다는 뜻임
   ansible all -m apt -a name=vim-nox --become --ask-become-pass
