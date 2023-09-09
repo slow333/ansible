@@ -19,3 +19,7 @@ ubuntu22 는 무슨이유에서 인지 keyboard lag 이 심하게 걸려서...
 ubuntu는 무슨 이유인지 pc하고 copy past가 안됨
 
  결국 centos 7에 설치해서 다시 설정하고 시작함...
+
+ centos도 버벅 거려서 윈도우에서 wsl 설치하고 기타 등등 해서
+ vs code를 설치해서 작업을 수행해야 할 것 같음..
+ 파일 공유, ssh 설치, git 설치 등 필요
