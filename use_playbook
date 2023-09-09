@@ -6,20 +6,20 @@
 
  - hosts: all		#대상 지정
    become: true		#권한 설정
-   tasks:		# 할일
+   tasks:		# 할일 pre_tasks 사전에 수행
 
    - name: update repo
-     apt:
+     apt:  # package로 하면 apt, dnf 등에 대해 자동 지정
        update_cache: yes
 
    - name: install apache2 package	#이름 지정
      apt:				# 모듈 지정
        name: apache2			# 모듈에 따른 패키지 이름
-       state: latest			# 최신버젼 설치
+       state: latest			# present(설치), absent(제거), latest(최신버젼)
    - name: add php support for apache
      apt:
        name: libapache2-mod-php
-       state: latest
+       state: latest 
 
 패키지 지우기
   ===> state: absent # 이렇게 바꾸면 지우는 것임
@@ -29,6 +29,7 @@
 
  - hosts: all
    become: true
+   gather_facts: no
    tasks:
 
    - name: update repo

@@ -1,0 +1,115 @@
+---
+- name : Install nginx on centos7.9
+  hosts: centos
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: install epel-release
+      yum: name=epel-release state=latest
+    - name: install nginx web server
+      yum: name=nginx state=present
+    - name: upload default index.html for web server
+      get_url: url=https://www.nginx.com dest=/usr/share/nginx/html/ mode=0644
+    - name: start nginx web server
+      service: name=nginx state=started
+
+- name: install nginx on ubuntu
+  hosts: ubuntu
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: install nginx web server
+      apt: pkg=nginx state=present update_cache=yes
+    - name: upload default index.html for web server
+      get_url: url=https://www.nginx.com dest=/usr/share/nginx/html/ mode=0644 validate_certs=no
+
+- name: Setup for the Ansible's Environment
+  hosts: centos:ubuntu:rhel
+  gather_facts: no
+
+  tasks:
+    - name: Create vim env's directories & files
+      shell: "{{ item }}"
+      with_items:
+        - "touch ~/.vimrc"
+
+    - name: Install vim-enhanced
+      yum:
+        name: vim-enhanced
+        state: present
+
+    - name: Install git
+      yum:
+        name: git
+        state: present
+
+    - name: Configure vimrc
+      lineinfile:
+        path: ~/.vimrc
+        line: "{{ item }}"
+      with_items:
+        - "set number"
+        - "set hlsearch"
+        - "set autoindent"
+        - "set ts=4"
+        - "set sts=4"
+        - "set cindent"
+        - "set laststatus=2"
+        - "set shiftwidth=4"
+        - "set showmatch"
+        - "set smartcase"
+        - "set smarttab"
+        - "set smartindent"
+        - "set ruler"
+        - "set fileencodings=utf8,euc-kr"
+        - "syntax on"
+
+    - name: Configure Bashrc
+      lineinfile:
+        path: ~/.bashrc
+        line: "{{ item }}"
+      with_items:
+        - "alias ll='ls -alF'"
+        - "alias la='ls -A'"
+        - "alias l='ls -CFlh'"
+        - "alias lo='ls -o'"
+        - "alias lh='ls -lh'"
+        - "alias rm='rm -i'"
+        - "alias cp='cp -i'"
+        - "alias mv='mv -i'"
+        - "alias fw='firewall-cmd'"
+        - "alias scst='sudo systemctl start'"
+        - "alias scsp='sudo systemctl stop'"
+        - "alias scre='sudo systemctl restart'"
+        - "alias scsu='sudo systemctl status'"
+        - "alias scen='sudo systemctl enable'"
+        - "alias cc='clear'"
+        - "alias apti='sudo apt-get install -y'"
+        - "alias yumi='yum install -y'"
+        - "alias vi='vim'"
+        - 'PS1="\e[1;31m\]\u : \[\e[1;36m\]\w\[\e[m\] # "'
+
+- name : firewall open http and https on centos7.9
+  hosts: servers
+  gather_facts: no
+
+  tasks:
+    - name: http service open
+      shell: "firewall-cmd --permanent --add-service=http"
+    - name: https service open
+      shell: "firewall-cmd --permanent --add-service=https"
+    - name: 80 port open
+      shell: "firewall-cmd --permanent --add-port=80/tcp"
+    - name: firewalld reload
+      shell: "firewall-cmd --reload"
+
+- name : setup centos timezone
+  hosts: centos:ubuntu
+  gather_facts: no
+
+
+  tasks:
+    - name: to Asia/Seoul
+      timezone: name=Asia/Seoul

@@ -57,6 +57,14 @@ ansible 자동화 기능 관련
     => key, value 형태로 겁나 많이 나옮
        이걸 가지고 필터링 해서 사용함
 
+4. cli 기반으로 명령을 직접 수행 또는 
+    $ ansible all -m shell -a "ls -al" -u root
+
+  - 암호를 통해 접속 가능 : sudo로 실행해야 함.( 옵션 -k)
+    $ sudo ansible all -m shell -a "ls -al" -k
+    또는
+    # ansible all -m shell -a "ls -al" -k
+
 4. 권한 요청하기, 모듈 정의하고 설치 패키지 이름 정하기
   ansible all -m apt -a update_cache=true --become --ask-become-pass
   ansible all -m yum -a update_cache=true --become --ask-become-pass
@@ -67,4 +75,13 @@ ansible 자동화 기능 관련
      --ask-become-pass는 암호를 입력한다는 뜻임
   ansible all -m apt -a name=vim-nox --become --ask-become-pass
       => name은 패키지 이름을 정의해서 설치를 진행
- 
+
+3. playbook을 통해 수행
+  - vi test.yml => 생성
+  - ansible-playbook file_name.yml -k 
+  - ansible-playbook file_name.yml -u root
+
+  - 기본 문법 : 
+    - name : 이름을 정의 한글 안됨
+      module_name: name="모듈에 따른 기본 내용" 
+	state= present(설치), absent(제거), latest(최신버젼) 
