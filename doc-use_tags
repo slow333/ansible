@@ -1,0 +1,8 @@
+name 밑에 tags를 붙이고 적당한 이름을 지정함
+
+ansible-playbook --list-tags [playbook...]
+
+-- 결과 ---
+
+#결과에 있는 테그를 보고 선택함
+ansible-playbook --tags centos --ask-become-pass [playbook...]

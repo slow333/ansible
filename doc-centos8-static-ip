@@ -1,0 +1,9 @@
+centos8 static ip 설정하기
+
+/etc/sysconfig/network-scripts/ifcfg-ens33
+BOOTPROTO= none
+
+네트워크 변경사항 적용
+nmcli networking off
+nmcli networking on
+

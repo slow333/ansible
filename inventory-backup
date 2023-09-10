@@ -2,3 +2,8 @@
 192.168.219.11  apache_package=httpd php_package=php
 192.168.219.12 apache_package=httpd php_package=php
 192.168.219.3  apache_package=apache2 php_package=libapache2-mod-php
+
+
+20, 221 : centos 7
+222, 223, 24 : ubuntu
+25 : centos 8
