@@ -1,0 +1,11 @@
+error 1: 잘접속이 안되고 .. 외부, gateway로 ping이 안됨
+    ip가 쫑나는 것 같음 
+
+error 2: FAILED! => 
+ ``` {"ansible_facts": {}, "changed": false, "failed_modules": 
+  {"ansible.legacy.setup": {"ansible_facts": 
+  {"discovered_interpreter_python": "/usr/bin/python"},```
+ ===>>>> 사용자 권한 설정 ansible user id : kal 
+ client server에 권한 설정 필요
+ ### 사용자 권한(id: kal)에 대한 권한 설정이 되어 있어야함
+   #  => /etc/sudoers => kal ALL=(ALL)   ALL

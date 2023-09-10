@@ -16,6 +16,10 @@ ansible 자동화 기능 관련
      또는 ssh-keygen 
       - passphrase : kal   #키를 보다 안전하게 함
         => ~/.ssh 에 키가 생성됨(개인키, 공개키.pub)
+   ## 중요 : key는 계정별로 생성됨 , 내가 키를 생성하는 계정이 kal이면 kal로 접속해야 함
+      ==> client server에 해당 계정에 대한 권한이 All이어야함 => errors 참고
+      ## root 계정으로 하면 접속 안됨(key 생성은 계정별로 됨...)
+
      1-1) key 추가 생성 이름 지정
       ssh-keygen -t ed25519 -C "ansible"
       Enter file in which to save the key (/home/kal/.ssh/id_ed25519): 
