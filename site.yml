@@ -4,32 +4,58 @@
   become: true
   pre_tasks:
 
-  - name: install updates (CentOS 7)
+  - name: update repo chache (CentOS 7)
     tags: always
     yum:
-      update_only: yes
       update_cache: yes
-    when: ansible_distribution =="centos"
+    changed_when: false
+    when: ansible_distribution =="CentOS"
 
-  - name: install updates (CentOS 8)
+  - name: update repo chache (CentOS 8)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution_version =="8"
 
-  - name: install updates (Ubuntu)
+  - name: update repo chache (Ubuntu)
     tags: always
     apt:
-    #  upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: add ssh key for rebecca
+    tags: always
+    authorized_key:
+      user: rebecca
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvJacQcnkUvqwIGvW4cU9hDm7aPY3wRD7S2G8tVIcky/wBc2oB23JmAHDjk5ZM0ZIzr+/792Zy8hK6PD4K8y8280/5lAyeNP/PSdJtt5WqeGWyzVv8P5VbMiX2q3t4WFB2jApiRn/Q5IRy6Fiz2g1vOQEtarXbj7GvznBv0+LVhEk3geZEMqgZf+MmLRGhLz+dVaccIJogkNmUpc7Ksv2Ctb/sP46EadqZ7qKbizeT3PaL+ymrrONoD/bX0R0ojDaJLS1LTr5gJyNkW8v5jrx6/pVT6JuRFFsGwAtoS9Gd/obnd529aoyjubOEXpI+SQDvZH68BNwImlye6ydyhDboI03E0YgpI5f38ADoShQrrDKgGzbm+nPSogJZK7g7e6/TUp9ZaDp51vOM2nQrcC484ODsm+VuqvsAdUZbdfT+tEvF2xADPoHfDwWEs9bV70WFy8XWnwlE1+JrykmvpvqfGbabMQ/URA6jPUC+yJETbmoyq3CUHZbYh4mUeEaa+q8= kal@Home"
+
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
 
 - hosts: web_servers
   become: true
   tasks:
 
-  - name: install apache2, php package
+  - name: install apache2, php package(ubuntu)
     apt:
       name:
         - apache2
@@ -37,7 +63,7 @@
       state: latest
     when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2, php package
+  - name: install apache2, php package(centos8)
     dnf:
       name: 
         - httpd
@@ -45,15 +71,41 @@
       state: latest
     when: ansible_distribution == "CentOS" and ansible_distribution_version =="8"
 
-  - name: install apache2, php package
+  - name: install apache2, php, vim package(centos7)
     yum:
       name: 
         - httpd
         - php
+        - vim
       state: latest
       update_cache: yes
     when: ansible_distribution == "CentOS"
+
+  - name: start httpd (CentOS)
+    tags: apache, centos, httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "CentOS"
   
+  - name: change email address for admin
+    tags: centos, apache, httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf # 수정할 서버의 파일 위치
+      regexp: '^ServerAdmin'   # regular expression
+      line: ServerAdmin change@come.com  # 한줄을 통째로 바꿈
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+  - name: restart httpd (CentOS)
+    tags: apache, centos, httpd
+    service:
+      name: httpd
+      state: restarted
+    #  enabled: yes
+    when: httpd.changed 
+
   - name: copy default html file
     tags: apache, apache2, httpd
     copy:
@@ -71,13 +123,13 @@
     package:
       name: mariadb
       state: latest
-    when: ansible_distribution == "CentoOS"
+    when: ansible_distribution == "CentOS"
 
   - name: install mariadb packakge(Ubuntu)
     apt:
       name: mariadb-server
       state: latest
-    when: ansible_distribution == "ubuntu"    
+    when: ansible_distribution == "Ubuntu"    
 
 - hosts: file_servers
   become: true
