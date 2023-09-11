@@ -1,0 +1,8 @@
+- name: copy default html file
+  tags: apache, apache2, httpd
+  copy:
+    src: default_site.html   # 위치는 기본적으로 files 폴더를 참고함
+    dest: /var/www/html/index.html  # 웹페이지 올라 가능 곳
+    owner: root
+    group: root
+    mode: 0644

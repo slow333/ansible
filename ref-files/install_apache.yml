@@ -1,0 +1,32 @@
+---
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache2, php package
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache2, php package
+    dnf:
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS" and ansible_distribution_version =="8"
+
+  - name: install apache2, php package
+    yum:
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"

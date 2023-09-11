@@ -6,3 +6,4 @@ ansible-playbook --list-tags [playbook...]
 
 #결과에 있는 테그를 보고 선택함
 ansible-playbook --tags centos --ask-become-pass [playbook...]
+ansible-playbook --tags "centos, db" --ask-become-pass [playbook...]
