@@ -80,13 +80,3 @@ ansible 자동화 기능 관련
      --ask-become-pass는 암호를 입력한다는 뜻임
   ansible all -m apt -a name=vim-nox --become --ask-become-pass
       => name은 패키지 이름을 정의해서 설치를 진행
-
-3. playbook을 통해 수행
-  - vi test.yml => 생성
-  - ansible-playbook file_name.yml -k 
-  - ansible-playbook file_name.yml -u root
-
-  - 기본 문법 : 
-    - name : 이름을 정의 한글 안됨
-      module_name: name="모듈에 따른 기본 내용" 
-	state= present(설치), absent(제거), latest(최신버젼) 

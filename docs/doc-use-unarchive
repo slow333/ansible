@@ -1,0 +1,13 @@
+#워크스테이션을 구성하는 일반적인 방법
+
+- name: install unzip
+  package: # 위의 이름을 그대로 적용한다는 의미 ??? 정확하지 않음
+    name: unzip
+- name: install terraform
+  unarchive:  # 아래 경로에서 다운로드 받아서 압축을 풀음
+    src: https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+    dest: /usr/local/bin #이름을 지정하지 않음(가져온 파일에서 그냥 사용)
+    remote_src: yes  
+    mode: 0755
+    owner: root
+    group: root

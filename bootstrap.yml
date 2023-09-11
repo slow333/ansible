@@ -1,0 +1,50 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (CentOS 7)
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution =="CentOS"
+
+  - name: install updates (CentOS 8)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution_version =="8"
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+     # upgrade: dist 시간이 너무 오래 걸림 일단 취소
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: create user rebecca for ansible admin
+    tags: always
+    user:
+      name: rebecca
+      groups: root
+  - name: add ssh key for rebecca
+    tags: always
+    authorized_key:
+      user: rebecca
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvJacQcnkUvqwIGvW4cU9hDm7aPY3wRD7S2G8tVIcky/wBc2oB23JmAHDjk5ZM0ZIzr+/792Zy8hK6PD4K8y8280/5lAyeNP/PSdJtt5WqeGWyzVv8P5VbMiX2q3t4WFB2jApiRn/Q5IRy6Fiz2g1vOQEtarXbj7GvznBv0+LVhEk3geZEMqgZf+MmLRGhLz+dVaccIJogkNmUpc7Ksv2Ctb/sP46EadqZ7qKbizeT3PaL+ymrrONoD/bX0R0ojDaJLS1LTr5gJyNkW8v5jrx6/pVT6JuRFFsGwAtoS9Gd/obnd529aoyjubOEXpI+SQDvZH68BNwImlye6ydyhDboI03E0YgpI5f38ADoShQrrDKgGzbm+nPSogJZK7g7e6/TUp9ZaDp51vOM2nQrcC484ODsm+VuqvsAdUZbdfT+tEvF2xADPoHfDwWEs9bV70WFy8XWnwlE1+JrykmvpvqfGbabMQ/URA6jPUC+yJETbmoyq3CUHZbYh4mUeEaa+q8= kal@Home"
+
+  - name: add sudoers file for rebecca
+    tags: always
+    copy:
+      src: sudoer_rebecca
+      dest: /etc/sudoers.d/rebecca
+      owner: root
+      group: root
+      mode: 0440

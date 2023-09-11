@@ -1,5 +1,13 @@
 1. playbook 기초
 
+  - ansible-playbook file_name.yml -k 
+  - ansible-playbook file_name.yml -u root
+
+  - 기본 문법 : 
+    - name : 이름을 정의 한글 안됨
+      module_name: name="모듈에 따른 기본 내용" 
+
+      
  업데이트=> 패키지 설치 하기. 
  이름.yml
  ---

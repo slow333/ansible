@@ -1,0 +1,39 @@
+#사용자 계정을 생성 => ansible에서 사용하기 위한
+1. 전체 사용자에 대해 사용자를 생성함
+2. 그런 후에 ssh를 copy
+3. sudoer에 추가한 계정에 대한 권한을 설정(all로 설정 해야함)
+   => ssh -i ~/.ssh/id_rsa rebecca@192.168.219.225 접속이 가능함
+4. ansible.cfg 파일을 수정해서 생성한 계정으로 접속하게 구성
+5. ansible-playbook site.yml ==> --ask-become-pass 없어도됨
+
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: create user rebecca for ansible admin
+    tags: always
+    user:
+      name: rebecca
+      groups: root
+  
+  - name: add ssh key for rebecca
+    tags: always
+    authorized_key:
+      user: rebecca
+      # 생성한 key를 상대방 서버에 복사해 넣음
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvJacQcnkUvqwIGvW4cU9hDm7aPY3wRD7S2G8tVIcky/wBc2oB23JmAHDjk5ZM0ZIzr+/792Zy8hK6PD4K8y8280/5lAyeNP/PSdJtt5WqeGWyzVv8P5VbMiX2q3t4WFB2jApiRn/Q5IRy6Fiz2g1vOQEtarXbj7GvznBv0+LVhEk3geZEMqgZf+MmLRGhLz+dVaccIJogkNmUpc7Ksv2Ctb/sP46EadqZ7qKbizeT3PaL+ymrrONoD/bX0R0ojDaJLS1LTr5gJyNkW8v5jrx6/pVT6JuRFFsGwAtoS9Gd/obnd529aoyjubOEXpI+SQDvZH68BNwImlye6ydyhDboI03E0YgpI5f38ADoShQrrDKgGzbm+nPSogJZK7g7e6/TUp9ZaDp51vOM2nQrcC484ODsm+VuqvsAdUZbdfT+tEvF2xADPoHfDwWEs9bV70WFy8XWnwlE1+JrykmvpvqfGbabMQ/URA6jPUC+yJETbmoyq3CUHZbYh4mUeEaa+q8= kal@Home"
+
+  - name: add sudoers file for rebecca
+    tags: always
+    copy:
+      src: sudoer_rebecca # files/sudoer_rebecca 를 생성 (rebecca ALL=(ALL) NOPASSWD: ALL)
+      dest: /etc/sudoers.d/rebecca # 대상 서버에 파일을 복사해서 넣음
+      owner: root
+      group: root
+      mode: 0440
+
+# ansible.cfg
+[defaults]
+inventory= inventory
+private_key_file= ~/.ssh/id_rsa
+remote_user = rebecca  # 추가

@@ -1,0 +1,19 @@
+특정파일의 내용을 수정하는 모듈
+
+- name: change email address for admin
+  tags: centos, apache, httpd
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf # 수정할 서버의 파일 위치
+    regexp: '^ServerAdmin'   # regular expression
+    line: ServerAdmin change@come.com  # 한줄을 통째로 바꿈
+  when: ansible_distribution == "CentOS"
+  register: httpd # 변수 지정 아무거나
+
+- name: restart httpd (CentOS)
+  tags: apache, centos, httpd
+  service:
+    name: httpd
+    state: restarted
+  #  enabled: yes
+  when: httpd.changed # 위의 변수를 받아서 변경되면 수행 함, 순서상 없어도 되는데 ...
+# 오타가 많으니.. 조심 오타 나면 이상하게 동작함...

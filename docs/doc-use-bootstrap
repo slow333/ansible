@@ -1,0 +1,9 @@
+# 그 bootstrap이 아님 => 초기화 설정을 위한 구성
+# 서버의 초기 설정에 관련된 파일만 모아 놓음
+
+ 1. 메일 실행 파일(site.yml)에서 upgrade: dist 와  update_only: yes 를 제거함
+ 2. 그리고 changed_when: false 을 추가함(update_cache가 잘되던 안되던 상관없다는 ...)
+
+ # 실행은
+ 1. bootstrap.yml  (--ask-become-pass 사용 해서..)
+ 2. site.yml

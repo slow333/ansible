@@ -1,0 +1,13 @@
+- name: install apache2 package	#이름 지정
+  apt:				# 모듈 지정
+    name: apache2			# 모듈에 따른 패키지 이름
+    state: latest			# present(설치), absent(제거), latest(최신버젼) 
+
+  # when은 gather_facts 를 통해 수집되는 항목에 대한 filter 기능 수행
+  # 대소문자를 구분하니 정확하게 이름을 적어야 함
+  when: ansible_distribution == "Ubuntu" # 하나 지정
+  # 배열로 지정
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+  # 여러 조건 지정
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "8.2"
+
