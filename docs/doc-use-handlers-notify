@@ -1,0 +1,40 @@
+register를 통해 변경을 감지하는 내용을 변경
+onChange에 대한 이벤트를 별도로 관리 
+
+#### as-is  ######
+
+- name: change email address for admin
+  tags: centos, apache, httpd
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf      # 수정할 서버의 파일 위치
+    regexp: '^ServerAdmin'                # regular expression
+    line: ServerAdmin change@come.com     # 한줄을 통째로 바꿈
+  when: ansible_distribution == "CentOS"
+  register: httpd
+
+- name: restart httpd (CentOS)
+  tags: apache, centos, httpd
+  service:
+    name: "{{ apache_service }}"
+    state: restarted
+  #  enabled: yes
+  when: httpd.changed 
+
+#### to-be #####
+
+- name: change email address for admin
+  tags: centos, apache, httpd
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf      # 수정할 서버의 파일 위치
+    regexp: '^ServerAdmin'                # regular expression
+    line: ServerAdmin change@come.com     # 한줄을 통째로 바꿈
+  when: ansible_distribution == "CentOS"
+  notify: restart_apache                  # handlers를 찾아서 실행함
+
+roles > web_servers > handlers 폴더 생성 => main.yml
+
+- name: restart_apache                    # 이름이 위에서 notify 한 것과 같아야 함
+  tags: apache, centos, httpd
+  service:
+    name: "{{ apache_service }}"
+    state: restarted
