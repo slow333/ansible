@@ -1,0 +1,35 @@
+# 템플릿을 생성해서 이 걸 가지고 대상 서버의 구성을 변경함
+# 목적 : 버젼관리, 정기적으로 template을 변경해서 보안을 강화함
+  => 그러기 위해서 template을 정의하고 이 파일에서 정기적으로 사용자 정보를 변경함
+
+1. roles > base > templates 생성
+   # ubuntu(local)centos의 config파일을 복사해옮 => j2(jinja2)파일로 변환해서 복사
+   cp /etc/ssh/sshd_config sshd_config_ubuntu.j2 
+   # centos(remote)의 config파일을 복사해옮 => j2(jinja2)파일로 변환해서 복사
+   # 권한 없다고 하면 서버에 가서 변경 : chmod a+r /etc/ssh/sshd_config =>원복 o-r
+   scp 192.168.219.221:/etc/ssh/sshd_config sshd_config_centos.j2 
+
+2. 파일 수정(내용 추가)
+   AllowUsers {{ ssh_users }}
+
+3. host_vars 파일을 수정(추가) => 서버 버전에 맞게 파일을 지정
+   ssh_users: "kal rebecca"
+   ssh_template_file: sshd_config_ubuntu.j2
+
+4. roles > base > tasks > main.yml 수정(추가)
+  - name: generate sshd_config file from templates
+    tags: ssh
+    template:
+      src: "{{ ssh_template_file }}"
+      dest: /etc/ssh/sshd_config
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart_sshd
+
+5. handlers 폴더 생성(roles > base > handlers)
+  main.yml 생성
+  - name: restart_sshd
+    service: 
+      name: sshd
+      state: restarted
