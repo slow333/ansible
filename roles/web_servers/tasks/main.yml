@@ -1,0 +1,59 @@
+- name: install apache2, php package(ubuntu)
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install apache2, php package(centos8)
+  dnf:
+    name: 
+      - httpd
+      - php
+    state: latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_version =="8"
+
+- name: install apache2, php, vim package(centos7)
+  yum:
+    name: 
+      - httpd
+      - php
+      - vim
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: start httpd (CentOS)
+  tags: apache, centos, httpd
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+
+- name: change email address for admin
+  tags: centos, apache, httpd
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf # 수정할 서버의 파일 위치
+    regexp: '^ServerAdmin'   # regular expression
+    line: ServerAdmin change@come.com  # 한줄을 통째로 바꿈
+  when: ansible_distribution == "CentOS"
+  register: httpd
+
+- name: restart httpd (CentOS)
+  tags: apache, centos, httpd
+  service:
+    name: httpd
+    state: restarted
+  #  enabled: yes
+  when: httpd.changed 
+
+- name: copy default html file
+  tags: apache, apache2, httpd
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644

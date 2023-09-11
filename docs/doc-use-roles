@@ -1,0 +1,14 @@
+# roles를 사용해서 실행파일을 refactory 함
+1. 실행 파일에서는 role을 정의하고 => 이름만 지정함
+2. role에 맞게 폴더를 생성함 (폴더 이름 자체가 내용임, 모듈이고 tasks이고 files 임)
+   => roles > base > tasks
+   => roles > web_servers > tasks
+3. tasks 폴더에 main.yml 생성
+   => 실행할 내용만 적음(초기 인덴트 없음)
+   => 대상 서버에 대한 내용 없음(hosts: all => 없음)
+   => name: ...
+        package:
+          - name: ...
+4. 불러와서 참고해야 할 파일에 대한 폴더 구조를 적용해야 함
+  => web_servers > files > default_site.html 을 넣어 줘야 함
+  => 계정 생성 관련된 내용은 bootstrap에서 별도로 정의해서 관련 파일은 필요없음
